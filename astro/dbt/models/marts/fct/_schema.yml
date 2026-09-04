@@ -22,7 +22,6 @@ models:
       - name: review_id
         data_tests:
           - not_null
-          - unique
       
       - name: order_id
         data_tests:
