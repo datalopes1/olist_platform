@@ -1,0 +1,34 @@
+[project]
+name = "analytics-platform"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dbt-core>=1.12.3",
+    "dbt-postgres>=1.11.0",
+    "dlt[postgres]>=1.30.0",
+    "kagglehub>=1.0.2",
+    "loguru>=0.7.3",
+    "pandas>=3.0.5",
+]
+
+
+[tool.sqlfluff.core]
+dialect = "postgres"
+templater = "jinja"
+max_line_length = 120
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "I",
+    "B",
+    "UP",
+    "SIM",
+]
