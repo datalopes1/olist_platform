@@ -1,0 +1,21 @@
+
+  create view "olist_db"."dev_stg"."stg__geolocations__dbt_tmp"
+    
+    
+  as (
+    with source as (
+    select * from "olist_db"."raw"."geolocations"
+),
+
+final as (
+    select
+        geolocation_zip_code_prefix as zip_code_prefix,
+        geolocation_state as uf,
+        geolocation_lat as latitude,
+        geolocation_lng as longitude,
+        upper(geolocation_city) as cidade
+    from source
+)
+
+select * from final
+  );

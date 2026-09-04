@@ -1,0 +1,16 @@
+version: 2
+
+models:
+  - name: int__orders_enriched
+    columns:
+      - name: order_id
+        data_tests:
+          - not_null
+          - unique
+          
+  - name: int__unique_zip_codes
+    columns:
+      - name: zip_code_prefix
+        data_tests:
+          - not_null
+          - unique

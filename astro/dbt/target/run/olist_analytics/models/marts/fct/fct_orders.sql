@@ -1,0 +1,86 @@
+
+    
+    
+
+  create  table "olist_db"."dev_marts"."fct_orders__dbt_tmp"
+    
+    
+    as
+  
+  (
+    with  __dbt__cte__int__orders_enriched as (
+with source as (
+    select * from "olist_db"."dev_stg"."stg__orders"
+)
+
+select
+    order_id,
+    customer_id,
+    order_purchase_ts,
+    order_approved_at,
+    order_delivered_carrier_dt,
+    order_delivered_customer_dt,
+    order_estimated_delivery_dt,
+    order_status,
+    case
+        when
+            date_trunc('day', order_delivered_customer_dt)
+            > order_estimated_delivery_dt
+            then 1
+        else 0
+    end as is_late,
+    case when order_status = 'DELIVERED' then 1 else 0 end as is_delivered,
+    case
+        when
+            date_trunc('day', order_delivered_customer_dt) > order_estimated_delivery_dt
+            then
+                round(
+                    extract(
+                        epoch from (
+                            date_trunc('day', order_delivered_customer_dt)
+                            - order_estimated_delivery_dt
+                        )
+                    )
+                    / 86400.0,
+                    2
+                )
+        else 0
+    end as days_late,
+    round(extract(epoch from (order_approved_at - order_purchase_ts)) / 86400.0, 2)
+        as approval_lead_time,
+    round(
+        extract(epoch from (order_delivered_customer_dt - order_delivered_carrier_dt))
+        / 86400.0,
+        2
+    ) as delivery_lead_time,
+    round(
+        extract(epoch from (order_delivered_customer_dt - order_purchase_ts)) / 86400.0,
+        2
+    ) as order_lead_time
+from source
+), source as (
+    select * from __dbt__cte__int__orders_enriched
+),
+
+final as (
+    select
+        order_id,
+        customer_id,
+        order_status,
+        order_purchase_ts,
+        order_approved_at,
+        order_delivered_carrier_dt,
+        order_delivered_customer_dt,
+        order_estimated_delivery_dt,
+        is_late,
+        is_delivered,
+        days_late,
+        approval_lead_time,
+        delivery_lead_time,
+        order_lead_time
+    from source
+)
+
+select * from final
+  );
+  

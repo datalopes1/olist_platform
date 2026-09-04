@@ -1,0 +1,22 @@
+default:
+  target: prod
+  outputs:
+    dev:
+      type: postgres
+      host: localhost
+      port: 5433
+      database: olist_db
+      user: "{{ env_var('POSTGRES_USER') }}"
+      password: "{{ env_var('POSTGRES_PASSWORD') }}"
+      schema: dev
+      threads: 4
+
+    prod:
+      type: postgres
+      host: "{{ env_var('POSTGRES_HOST') }}"
+      port: 5433
+      database: olist_db
+      user: "{{ env_var('POSTGRES_USER') }}"
+      password: "{{ env_var('POSTGRES_PASSWORD') }}"
+      schema: dwh
+      threads: 4
