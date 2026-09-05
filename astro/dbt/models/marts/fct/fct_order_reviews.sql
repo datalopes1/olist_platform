@@ -3,7 +3,7 @@ with source as (
 ),
 
 final as (
-    select 
+    select
         review_id,
         order_id,
         review_dt,

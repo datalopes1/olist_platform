@@ -3,7 +3,7 @@ with source as (
         zip_code_prefix,
         max(uf) as uf,
         max(cidade) as cidade
-    from dev_stg.stg__geolocations
+    from {{ ref('stg__geolocations') }}
     group by
         zip_code_prefix
 )
